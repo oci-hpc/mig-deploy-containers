@@ -1,0 +1,12 @@
+---
+deepops_mig_devices: "all"
+nv_services:
+  - nvidia-persistenced
+  - nvidia-fabricmanager
+  - docker
+nv_modules:
+  - nv_peer_mem
+  - nvidia_uvm
+  - nvidia_drm
+  - nvidia_modeset
+  - nvidia

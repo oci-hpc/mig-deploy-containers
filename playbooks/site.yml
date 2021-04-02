@@ -1,0 +1,8 @@
+- hosts: localhost
+  become: true
+  roles:
+    - docker
+    - nfs-client
+    - nvidia-docker
+    - enable-mig
+

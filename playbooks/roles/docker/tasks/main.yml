@@ -1,0 +1,59 @@
+---
+# requires: ansible-galaxy collection install community.docker
+# sudo yum install pip
+# pip install docker
+# run command: ansible-playbook site.yml -e 'ansible_python_interpreter=/usr/bin/python2.7'
+
+- name: update epel release
+  become: true
+  yum:
+    name: oracle-epel-release-el7
+    state: latest
+
+- name: install python
+  yum:
+    name: 
+      - python27
+      - python-pip
+    state: latest
+
+- name: install pip docker
+  pip:
+    name: docker
+
+
+#- name: Add docker repository
+#  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 
+
+- name: Add docker repository
+  shell: yum-config-manager --add-repo http://yum.oracle.com/public-yum-ol7.repo
+
+- name: Install docker
+  become: true
+  yum: 
+    name: 
+      - docker-engine
+    state: latest
+
+- name: Make sure docker is running
+  ansible.builtin.systemd:
+    state: started
+    name: docker
+
+- name: Enable service docker
+  ansible.builtin.systemd:
+    name: docker
+    enabled: yes
+
+- name: Ensure group "docker" exists
+  ansible.builtin.group:
+    name: "docker"
+    state: present
+
+- name: run docker without sudo
+  ansible.builtin.user:
+    name: "opc"
+    group: "docker"
+    append: yes
+    state: present
+

@@ -1,0 +1,21 @@
+---
+- name: Install nfs packages
+  yum:
+    name: '{{ nfs_packages }}'
+    state: present
+  tags: install-only
+
+- name: create share directory
+  become: true
+  file:
+    path: "{{ nfs_target_path }}"
+    state: directory
+    owner: opc
+    group: opc
+
+- name: Mount NFS with options
+  mount:
+    path: "{{ nfs_target_path }}"
+    src: "{{ nfs_source_IP }}:{{ nfs_export_path | trim() }}"
+    fstype: nfs
+    state: mounted

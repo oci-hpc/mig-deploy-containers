@@ -1,0 +1,42 @@
+---
+- name: Add nvidia-docker repository
+  shell: yum-config-manager --add-repo https://nvidia.github.io/nvidia-docker/rhel7.7/nvidia-docker.repo
+
+- name: Install nvidia-container-toolkit
+  become: true
+  yum: 
+    name: nvidia-container-toolkit
+    disable_excludes: all
+    state: latest
+
+- name: Restart docker
+  ansible.builtin.systemd:
+    state: restarted
+    name: docker
+
+- name: reload docker group
+  command: newgrp docker
+
+- name: Log into private registry and force re-authorization
+  community.docker.docker_login:
+    registry_url: "{{ registry_url }}"
+    username: "{{ registry_username }}"
+    password: "{{ registry_password }}"
+    reauthorize: yes
+  when: registry_url != ''
+
+- name: Log into public registry and force re-authorization
+  community.docker.docker_login:
+    username: "{{ registry_username }}"
+    password: "{{ registry_password }}"
+    reauthorize: yes
+  when: registry_url == '' and registry_username != ''
+
+- name: Pull an image
+  become: true
+  community.docker.docker_image:
+    name: "{{ docker_image_name }}"
+    source: pull
+    # Select platform for pulling. If not specified, will pull whatever docker prefers.
+    pull:
+      platform: amd64

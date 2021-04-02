@@ -1,0 +1,97 @@
+---
+# Pre-tasks
+- name: stop system services
+  ansible.builtin.systemd:
+    state: stopped
+    enabled: no
+    name: "{{ item }}"
+  with_items: "{{ nv_services }}"
+
+- name: unload drivers
+  modprobe:
+    state: absent
+    name: "{{ item }}"
+  with_items: "{{ nv_modules }}"
+
+# Manage MIG
+- name: enable MIG mode (all devices)
+  command: nvidia-smi -mig 1
+  when: deepops_mig_devices | default("") == "all"
+#- name: enable MIG mode (per device)
+#  command: nvidia-smi -mig 1 -i "{{ deepops_mig_devices }}"
+#  tags: enable, never
+#  when: deepops_mig_devices | default("") != "" and  deepops_mig_devices | default("") != "all"
+
+#- name: disable MIG mode (all devices)
+#  command: nvidia-smi -mig 0
+#  tags: disable, never
+#  when: deepops_mig_devices | default("") == "all"
+#- name: disable MIG mode (per device)
+#  command: nvidia-smi -mig 0 -i "{{ deepops_mig_devices }}"
+#  tags: disable, never
+#  when: deepops_mig_devices | default("") != "" and  deepops_mig_devices | default("") != "all"
+
+# Post-tasks
+- name: wait for MIG stuff to settle down and nvidia-persistenced to start again
+  pause:
+    seconds: 20
+
+- name: stop system services
+  systemd:
+    state: stopped
+    enabled: no
+    name: "{{ item }}"
+  with_items: "{{ nv_services }}"
+
+- name: unload drivers
+  modprobe:
+    state: absent
+    name: "{{ item }}"
+  with_items: "{{ nv_modules }}"
+
+- name: start fabric manager
+  systemd:
+    state: started
+    name: nvidia-fabricmanager
+
+- name: stop nvidia-persistenced again
+  systemd:
+    state: stopped
+    name: nvidia-persistenced
+
+#- name: reset GPUs
+#  command: nvidia-smi --gpu-reset
+
+- name: load drivers
+  modprobe:
+    state: present
+    name: "{{ item }}"
+  with_items: "{{ nv_modules }}"
+  ignore_errors: true
+
+- name: start system services
+  systemd:
+    state: started
+    enabled: yes
+    name: "{{ item }}"
+  with_items: "{{ nv_services }}"
+  ignore_errors: true
+
+# Permissions
+- name: grant user permissions to manage MIG instances
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0444'
+  with_items:
+    - /proc/driver/nvidia/capabilities/mig/config
+    - /proc/driver/nvidia/capabilities/mig/monitor
+
+- name: set MIG devices
+  command: nvidia-smi mig -cgi 9,3g.20gb -C
+  when: mig_number_devices == 8
+
+- name: set MIG devices
+  command: nvidia-smi mig -cgi 0,7g.40gb -C
+  when: mig_number_devices == 16
