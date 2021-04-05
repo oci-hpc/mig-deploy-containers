@@ -113,10 +113,11 @@ resource "null_resource" "remote-exec" {
     content      = yamlencode(
       {
         "nfs_target_path" : var.nfs_target_path,
-        "nfs_source_IP"   : var.create_ffs ? oci_file_storage_mount_target.FSSMountTarget.ip_address : var.nfs_source_IP
+        "nfs_source_IP"   : var.create_ffs ? oci_file_storage_mount_target.FSSMountTarget[0].ip_address : var.nfs_source_IP
         "nfs_export_path" : var.nfs_export_path
       }
     )
+    destination = "~/playbooks/roles/nfs-client/vars/main.yml"
   }
 
   provisioner "remote-exec" {

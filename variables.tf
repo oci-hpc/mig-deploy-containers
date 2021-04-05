@@ -245,6 +245,7 @@ variable "mig_number_devices" {
 variable "create_ffs" { default = true }
 variable "fss_compartment" {default = ""}
 variable "fss_ad" {default = ""}
+variable "fss_name" {default = "file-storage"}
 variable "nfs_target_path" { default = "/data"}
 variable "nfs_source_IP" { default = ""}
 variable "nfs_export_path" { default = "/data"}

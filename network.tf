@@ -22,7 +22,7 @@ resource "oci_core_internet_gateway" "simple_internet_gateway" {
 resource "oci_core_security_list" "public_fss_security_list" {
   count          = local.use_existing_network ? 0 : 1
   vcn_id         = oci_core_vcn.simple[count.index].id
-  compartment_id = var.targetCompartment
+  compartment_id = var.fss_compartment
 
   ingress_security_rules {
     protocol = "6"
@@ -47,6 +47,24 @@ resource "oci_core_security_list" "public_fss_security_list" {
     source   = "0.0.0.0/0"
     tcp_options {
       max = "2048"
+      min = "2048"
+    }
+  }
+
+    ingress_security_rules {
+    protocol = "6"
+    source   = "0.0.0.0/0"
+    tcp_options {
+      max = "2049"
+      min = "2049"
+    }
+  }
+
+    ingress_security_rules {
+    protocol = "6"
+    source   = "0.0.0.0/0"
+    tcp_options {
+      max = "2050"
       min = "2050"
     }
   }
@@ -54,7 +72,7 @@ resource "oci_core_security_list" "public_fss_security_list" {
   ingress_security_rules {
     protocol = "17"
     source   = "0.0.0.0/0"
-    tcp_options {
+    udp_options {
       max = "111"
       min = "111"
     }
@@ -63,7 +81,7 @@ resource "oci_core_security_list" "public_fss_security_list" {
   ingress_security_rules {
     protocol = "17"
     source   = "0.0.0.0/0"
-    tcp_options {
+    udp_options {
       max = "2048"
       min = "2048"
     }

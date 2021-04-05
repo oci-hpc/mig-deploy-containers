@@ -60,6 +60,10 @@ variableGroups:
       - create_fss
       - fss_compartment
       - fss_ad
+      - fss_name
+      - nfs_target_path
+      - nfs_export_path
+      - nfs_source_IP
 
   - title: "Virtual Cloud Network"
     variables:
@@ -219,7 +223,6 @@ variables:
     type: enum
     enum:
       - "BM.GPU4.8"
-      - "VM.Standard2.4"
     default: "BM.GPU4.8"
     title: "Compute Shape with MIG Support"
     required: true
@@ -491,27 +494,41 @@ variables:
     title: Number of GPU devices
     description: Number of GPU devices to create with MIG
 
-  create_ffs:
+  create_fss:
     type: boolean
     title: "Create FSS"
     default: false
     description: "For FSS, leave options filed empty."
 
+  nfs_source_IP:
+    type: string
+    title: "NFS server IP"
+    default: "0.0.0.0"
+    description: "IP address of the NFS server"
+    visible: 
+      not: 
+        - ${create_fss}
+
   fss_compartment:
     title: "FSS compartment"
+    default: compartment_ocid
     description: "Compartment to add the FSS Mount Target and File System"
     type: oci:identity:compartment:id
-    visible: 
-      - ${create_ffs}
+    visible: ${create_fss}
 
   fss_ad:
     type: oci:identity:availabilitydomain:name
     dependsOn:
       compartmentId: ${fss_compartment}
-    visible: 
-      - ${create_ffs}
+    visible: ${create_fss}
     description: "FSS Availability Domain"
     title: "FSS Availability Domain"
+  
+  fss_name:
+    type: string
+    title: "File Storage Name"
+    default: "file-storage"
+    description: "File Storage Name"
         
   nfs_target_path:
     type: string
@@ -525,14 +542,6 @@ variables:
     default: "/data"
     description: "NFS server export path"
 
-  nfs_source_IP:
-    type: string
-    title: "NFS server IP"
-    default: "0.0.0.0"
-    description: "IP address of the NFS server"
-    visible: 
-      - not:
-        - ${create_ffs}
 
 #############################################
 ###########    OUTPUT GROUPS     ############

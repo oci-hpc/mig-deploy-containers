@@ -6,12 +6,10 @@
   tags: install-only
 
 - name: create share directory
-  become: true
   file:
     path: "{{ nfs_target_path }}"
     state: directory
-    owner: opc
-    group: opc
+    mode: '1755'
 
 - name: Mount NFS with options
   mount:
@@ -19,3 +17,4 @@
     src: "{{ nfs_source_IP }}:{{ nfs_export_path | trim() }}"
     fstype: nfs
     state: mounted
+
