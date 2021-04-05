@@ -46,8 +46,9 @@
     state: stopped
     name: nvidia-persistenced
 
-#- name: reset GPUs
-#  command: nvidia-smi --gpu-reset
+- name: reset GPUs
+  become: true
+  command: nvidia-smi --gpu-reset
 
 - name: load drivers
   modprobe:
@@ -77,8 +78,8 @@
 
 - name: set MIG devices
   command: nvidia-smi mig -cgi 9,3g.20gb -C
-  when: mig_number_devices == 8
+  when: mig_number_devices == 16
 
 - name: set MIG devices
   command: nvidia-smi mig -cgi 0,7g.40gb -C
-  when: mig_number_devices == 16
+  when: mig_number_devices == 8

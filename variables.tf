@@ -222,6 +222,11 @@ variable "docker_image_name" {
   default = ""
 }
 
+variable "docker_run_options" {
+  description = "Options to use when running listed docker image"
+  default = ""
+}
+
 variable "registry_url" {
   description = "Registry URL for non-default registries"
   default = ""
@@ -242,7 +247,7 @@ variable "mig_number_devices" {
   default = 16
 }
 
-variable "create_ffs" { default = true }
+variable "create_fss" { default = true }
 variable "fss_compartment" {default = ""}
 variable "fss_ad" {default = ""}
 variable "fss_name" {default = "file-storage"}

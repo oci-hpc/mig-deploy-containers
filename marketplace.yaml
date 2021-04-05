@@ -54,6 +54,7 @@ variableGroups:
       - registry_username
       - registry_password
       - docker_image_name
+      - docker_run_options
 
   - title: "Persistent Storage"
     variables:
@@ -484,6 +485,12 @@ variables:
     required: false
     title: Image Name
     description: Image name to pull from the registry
+
+  docker_run_options:
+    type: string
+    required: false
+    title: Run image options
+    description: Options to use when running listed docker image
   
   mig_number_devices:
     type: enum

@@ -49,7 +49,7 @@ resource "oci_core_instance" "simple-vm" {
 resource "time_sleep" "wait" {
   depends_on = [oci_core_instance.simple-vm]
 
-  create_duration = "120s"
+  create_duration = "240s"
 }
   
 resource "null_resource" "remote-exec" {
@@ -147,7 +147,7 @@ resource "null_resource" "remote-exec" {
       "sudo yum install -y ansible", 
       "ansible-galaxy collection install community.docker",
       "sudo yum install -y python-pip",
-      "pip install docker",
+      "pip install docker --user",
       "ansible-playbook ~/playbooks/site.yml"
     ]
   }
@@ -162,6 +162,7 @@ resource "null_resource" "remote-exec" {
   
     inline = [
       "export DOCKER_IMAGE_NAME=${var.docker_image_name}",
+      "export DOCKER_RUN_OPTIONS=${var.docker_run_options}",
       "export NFS_EXPORT_PATH=${var.nfs_export_path}",
       "sudo sh ~/playbooks/save-mig-dev.sh",
       "sudo sh ~/playbooks/list-tokens.sh",
