@@ -83,3 +83,6 @@
    
    Then run `sh save-mig-dev.sh`
    
+# Note on using the 'destroy' command:
+
+If you deployed this stack with **Create FSS** checked, and then you use the `destroy` action, it will DELETE THE FSS AND ASSOCIATED DATA. If this is an issue, deploy FSS separately and provide the IP address and export path in the deployment.
