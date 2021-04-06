@@ -75,8 +75,11 @@
    
 4. SSH into the system in order to get instructions on how to connect to Jupyter sessions. Navigate to the `playbooks` directory located in the HOME directory of the instance. Run `sh list-tokens.sh`. This script will find all running containers and execute `jupyter notebook list` in each and output the connection instruction for each Jupyter session running. Users can first execute the `ssh -L <port>:localhost:<port> opc@<ip-address>` command to open a tunnel from their device to the remote. Then they can navigate to the token link provided by the script for secure access.
 
-If you'd like to run a different container than the one selected in the launch script, first set export values
-   `export DOCKER_RUN_OPTIONS=<additional-docker-options>`
-   `export DOCKER_IMAGE_OPTIONS=<target-image-name>`
-Then run `sh save-mig-dev.sh`
+   If you'd like to run a different container than the one selected in the launch script, first set export values
+   
+     `export DOCKER_RUN_OPTIONS=<additional-docker-options>`
+   
+     `export DOCKER_IMAGE_OPTIONS=<target-image-name>`
+   
+   Then run `sh save-mig-dev.sh`
    
