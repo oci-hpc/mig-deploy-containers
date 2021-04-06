@@ -49,6 +49,7 @@
 - name: reset GPUs
   become: true
   command: nvidia-smi --gpu-reset
+  ignore_errors: true
 
 - name: load drivers
   modprobe:

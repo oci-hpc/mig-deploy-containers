@@ -505,7 +505,6 @@ variables:
     type: boolean
     title: "Create FSS"
     default: false
-    description: "For FSS, leave options filed empty."
 
   nfs_source_IP:
     type: string
@@ -536,6 +535,7 @@ variables:
     title: "File Storage Name"
     default: "file-storage"
     description: "File Storage Name"
+    visible: ${create_fss}
         
   nfs_target_path:
     type: string
