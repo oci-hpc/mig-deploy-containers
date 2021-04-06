@@ -23,33 +23,53 @@
 3. Complete the form fields
    
    ### Compute Configuration
+   
    **Compute Compartment**: Select the compartment where you'd like the system to be deployed
+   
    **Instance Name**: Create a unique name for the instance
+   
    **DNS Hostname Label**: Create a hostname for the system, should be similar to Instance Name
+   
    **Compute Shape with MIG Support**: Select the shape you'd like to deploy. Currently only BM.GPU4.8 supports MIG
+   
    **Image**: !!IMPORTANT!! Select an image labelled with GPU for pre-configured NVIDIA drivers. If a GPU image is not selected, deployment will fail
+   
    **Availability Domain**: Select based on the chart above
+   
    **Public SSH Key**: Either choose a `.pub` file, or paste an SSH key for access
    
    ### Docker Configuration
+   
    This deployment will download an image with docker and start the image on each MIG device
    For private repositories: use the optional Registry fields to add your docker login information
+   
    **Image Name**: Name of the image to be downloaded and run. To test Jupyter Notebooks, enter `jupyter/datascience-notebook`
+   
    **Run Image Options**: Any options you'd like to run with the image. To mount an NFS drive to the container that is located on the host at `/data` for the Jupyter Notebook, enter `-v /data:/home/jovyan/work`
    
    ### Persistent Storage
+   
    The deployed system is intended to be ephemeral, so a persistent storage system needs to be mounted in order for data to persist after the GPU system is terminated.
+   
    **Create FSS**: If an NFS mount point does not exist, it is recommended to create one with OCI File Storage System (FSS). Check this box to create an FSS and mount point
+   
    **FSS Compartment**: (Appears when Create FSS is checked) Select the same compartment as the compute deployment
+   
    **FSS Availability Domain**: (Appears when Create FSS is checked) Select the same AD as the compute deployment
+   
    **File Storage Name**: Create a name for the FSS
+   
    **NFS Path**: The path where the NFS should be mounted on the node
+   
    **NFS Export Path**: The export path for the NFS mount
+   
    **NFS Server IP**: (Appears when Create FSS is unchecked) The IP address for the existing NFS system
    
    ### Virtual Cloud Network
+   
    It is recommended to deploy a new VCN for this deployment, as the terraform creates the appropriate security lists to communicate with FSS. Otherwise, select an existing VCN that has the appropriate network configuration for your environment
    
    ### Additional Configuration Options
+   
    These options allow you to tag the system in order to create reports in OCI. [Follow this guide](https://docs.oracle.com/en-us/iaas/Content/Tagging/Concepts/taggingoverview.htm) to learn more about tagging.
    
