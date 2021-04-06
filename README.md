@@ -57,7 +57,7 @@
    
    **FSS Availability Domain**: (Appears when Create FSS is checked) Select the same AD as the compute deployment
    
-   **File Storage Name**: Create a name for the FSS
+   **File Storage Name**: (Appears when Create FSS is checked) Create a name for the FSS
    
    **NFS Path**: The path where the NFS should be mounted on the node
    
